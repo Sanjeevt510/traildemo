@@ -8,24 +8,20 @@
 
 # Article API
 
-## The purpose of this exercise is to demonstrate how we would approach designing and implementing a simple service
+## The purpose of this Application is to demonstrate how we would approach designing and implementing a simple service
 
 <!--p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p-->
 
-# Application
-
-Sample appication as proof of concept TypeScript is a programming language and NestJs as framework.
-
 ## Technologies
 
-# languages, framework and libraries used for this version
+# Languages, Framework and Libraries used for this version
 
-. NestJs
-. TypeScript
-. JavaScript
-. Lodash
+- NestJs
+- TypeScript
+- JavaScript
+- Lodash
 
 ## Setup
 
