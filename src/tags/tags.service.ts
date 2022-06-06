@@ -12,7 +12,11 @@ export class TagsService {
   getAll(): Article[] {
     throw new NotFoundException(`No Route for /tags`);
   }
+  countTags(tagItem):string[] {
+ 
+    return _.flatten(_.map(tagItem, 'tags'));
   
+  }
   getAllTagsByDate(getTagFilterDto): Tags {
     const { tagName, tagDate } = getTagFilterDto;
     let tagItem = this.getAllTags(tagName).filter(
@@ -20,9 +24,11 @@ export class TagsService {
     );
     const tags: Tags = {
       tag: tagName,
-      count: tagItem.length,
+      //count: tagItem.length,
+      count: this.countTags(tagItem).length,
       articles: this.articleList(tagItem,"id"),
-      related_tags: this.relatedTagList(_.flatten(_.map(tagItem, 'tags')), tagName),
+      related_tags: this.relatedTagList(this.countTags(tagItem), tagName),
+     // related_tags: this.relatedTagList(_.flatten(_.map(tagItem, 'tags')), tagName),
     };
 
     if (tagItem.length == 0) {
