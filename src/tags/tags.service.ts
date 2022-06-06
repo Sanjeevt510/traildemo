@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Article } from 'src/article/article.model';
 import { ArticleService } from 'src/article/article.service';
 import * as _ from 'lodash';
+import { Tags } from './tags.model';
 
 @Injectable()
 export class TagsService {
@@ -11,45 +12,25 @@ export class TagsService {
   getAll(): Article[] {
     throw new NotFoundException(`No Route for /tags`);
   }
-
-  getAllTagsByDate(getTagFilterDto): Article[] {
+  
+  getAllTagsByDate(getTagFilterDto): Tags {
     const { tagName, tagDate } = getTagFilterDto;
     let tagItem = this.getAllTags(tagName).filter(
       (value) => value['date'].replace(/-/g, '') == tagDate,
     );
-    //  tagItem = tagItem.filter(
-    //   (value) => value['date'].replace(/-/g, '') == tagDate,
-    //  );
-    console.log(tagItem);
-    const tagArray = [];
-    _.forEach(tagItem, (value) => {
-      if (value['date'].replace(/-/g, '') == tagDate) {
-        _.forEach(value['tags'], (tagValue) => {
-          if (tagValue != tagItem) tagArray.push(tagValue);
-        });
-        //}
-      } else {
-        console.log(value);
-        console.log(tagDate);
-        tagItem = tagItem.filter(
-          (value) => value['date'].replace(/-/g, '') != tagDate,
-        );
-        //  tagName = tagName.filter(value => value['date'] != tagDate);
-      }
-    });
-    let abc = {
+    const tags: Tags = {
       tag: tagName,
       count: tagItem.length,
-      articles: _.map(tagItem, 'id'),
-      related_tags: _.pull(_.uniq(_.flatten(_.map(tagItem, 'tags'))), tagName),
+      articles: this.articleList(tagItem,"id"),
+      related_tags: this.relatedTagList(_.flatten(_.map(tagItem, 'tags')), tagName),
     };
-    console.log(abc);
+
     if (tagItem.length == 0) {
       throw new NotFoundException(
         `No Details found  for the request tags [${tagName}] for Dated [${tagDate}]`,
       );
     } else {
-      return tagItem;
+      return tags;
     }
   }
   getAllTags(tagItem: string): Article[] {
@@ -81,4 +62,21 @@ export class TagsService {
       return tagArrayToDisplay;
     }
   }
+
+  articleList(itemList,id):string[]{
+    itemList = _.orderBy(itemList, [id], ['desc']);
+    return _.map(_.slice(itemList,0,10),id)
+  } 
+
+  relatedTagList(tagList,tagName):string[]{
+    tagList = _.uniq(tagList);
+
+    for(let tag in tagList) {
+      if(_.toLower(tagList[tag]) == _.toLower(tagName)) {
+        tagList.splice(tag, 1);
+    }
+  }
+    return tagList
+  }
+  
 }

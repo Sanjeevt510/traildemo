@@ -2,6 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { Article } from 'src/article/article.model';
 import { TagsService } from './tags.service';
 import { GetTagFilterDto } from './dto/get-tag-filter.dto';
+import { Tags } from './tags.model';
 
 @Controller('tags')
 export class TagsController {
@@ -20,7 +21,7 @@ export class TagsController {
   }
 
   @Get('/:tagName/:tagDate')
-  getAllTagsByDate(@Param() getTagFilterDto: GetTagFilterDto): Article[] {
+  getAllTagsByDate(@Param() getTagFilterDto: GetTagFilterDto): Tags {
     return this.tagsService.getAllTagsByDate(getTagFilterDto);
   }
 }

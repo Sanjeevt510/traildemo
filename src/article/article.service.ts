@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Article } from './article.model';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { v4 as uuid } from 'uuid';
@@ -49,13 +49,18 @@ export class ArticleService {
 
   createArticle(createArticleDto: CreateArticleDto): Article {
     const { id, title, date, body, tags } = createArticleDto;
+    const found = this.articles.find((article) => article.id == id);
+    if (found) {
+      throw new ConflictException('Id already exist');
+    } 
+    
     const article: Article = {
       id,
       title,
       date,
       body,
       tags,
-      uuid: uuid(),
+      uniqid:Math.floor(Date.now())
     };
     this.articles.push(article);
     return article;

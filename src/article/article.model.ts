@@ -4,5 +4,14 @@ export interface Article {
   date: string;
   body: string;
   tags: string[];
-  uuid: string;
+  uniqid:number;
+
+}
+export interface ArticleRes {
+  id: number;
+  title: string;
+  date: string;
+  body: string;
+  tags: string[];
+
 }
